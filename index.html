@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Квикли — стритфуд и азиатская кухня в Берёзе</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fff;--surface:#fff6ea;--text:#1d1a17;--muted:#6f655b;--line:#ecdfce;
+  --orange:#ff6a13;--yellow:#ffc933;--ink:#1d1a17;--on-accent:#1d1a17;
+  --display:'Unbounded','Arial Black',sans-serif;--body:'Manrope','Segoe UI',Arial,sans-serif;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#171412;--surface:#241e1a;--text:#f6efe6;--muted:#b3a698;--line:#3a312a}}
+:root[data-theme="dark"]{--bg:#171412;--surface:#241e1a;--text:#f6efe6;--muted:#b3a698;--line:#3a312a}
+html{scroll-padding-top:env(safe-area-inset-top,0px) ;scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:400 16px/1.45 var(--body);padding-bottom:96px}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+
+/* Hero */
+.hero{background:var(--ink);color:#fff;padding:28px 20px 36px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-70px;top:-70px;width:240px;height:240px;border-radius:50%;background:var(--orange)}
+.hero::before{content:"";position:absolute;right:40px;top:120px;width:90px;height:90px;border-radius:50%;background:var(--yellow)}
+.hero-in{position:relative;z-index:1;max-width:960px;margin:0 auto}
+.logo{font:800 clamp(44px,13vw,88px)/.95 var(--display);letter-spacing:-.03em;margin:44px 0 12px;color:#fff}
+.tag{margin:0 0 22px;max-width:30ch;color:#e8dccb;font-size:17px}
+.facts{display:grid;gap:8px;margin:0 0 26px;padding:0;list-style:none;font-weight:600}
+.facts li{display:flex;gap:10px;align-items:center}
+.facts span{width:30px;height:30px;border-radius:50%;background:var(--yellow);color:var(--ink);display:grid;place-items:center;font-size:15px;flex:none}
+.btn{border:0;border-radius:14px;background:var(--orange);color:#fff;font-weight:700;padding:14px 22px;transition:transform .15s,background .15s}
+.btn:active{transform:scale(.97)}
+.btn.big{font-size:17px;padding:16px 26px;background:var(--yellow);color:var(--ink)}
+.btn,.tab,.stepper button{transition:transform .2s ease,filter .2s ease,background .2s ease,box-shadow .2s ease}
+@media (hover:hover){
+  .btn:hover{transform:scale(1.07);filter:brightness(1.12);box-shadow:0 6px 16px rgba(255,106,19,.35)}
+  .btn.big:hover{box-shadow:0 6px 18px rgba(255,201,51,.45)}
+  .tab:hover{transform:scale(1.07);filter:brightness(1.1);border-color:var(--orange)}
+  .stepper button:hover{filter:brightness(1.4)}
+  .card{transition:transform .25s ease,box-shadow .25s ease}
+  .card:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(0,0,0,.12)}
+}
+.btn:active,.tab:active{transform:scale(.96)}
+
+/* Tabs */
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.tabs-in{display:flex;gap:8px;overflow-x:auto;padding:12px 16px;max-width:960px;margin:0 auto;scrollbar-width:none}
+.tabs-in::-webkit-scrollbar{display:none}
+.tab{flex:none;border:1.5px solid var(--line);background:transparent;border-radius:999px;padding:9px 16px;font-weight:700;font-size:14px;color:var(--text)}
+.tab[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:var(--yellow)}
+:root[data-theme="dark"] .tab[aria-selected="true"]{background:var(--yellow);border-color:var(--yellow);color:var(--ink)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tab[aria-selected="true"]{background:var(--yellow);border-color:var(--yellow);color:var(--ink)}}
+
+/* Menu */
+main{max-width:960px;margin:0 auto;padding:22px 16px}
+h2{font:800 22px/1.2 var(--display);margin:0 0 4px;letter-spacing:-.02em}
+.sub{color:var(--muted);margin:0 0 18px}
+.grid{display:grid;gap:14px;grid-template-columns:1fr}
+@media (min-width:640px){.grid{grid-template-columns:1fr 1fr}}
+@media (min-width:900px){.grid{grid-template-columns:repeat(3,1fr)}}
+.card{display:flex;flex-direction:column;background:var(--surface);border-radius:20px;overflow:hidden;border:1px solid var(--line)}
+.photo{height:140px;display:grid;place-items:center;font-size:64px;position:relative}
+.photo small{position:absolute;left:10px;bottom:8px;font:600 11px var(--body);background:rgba(255,255,255,.75);color:#333;padding:2px 8px;border-radius:99px}
+.info{padding:14px 16px 16px;display:flex;flex-direction:column;gap:6px;flex:1}
+.info h3{margin:0;font-size:18px;font-weight:700}
+.info p{margin:0;color:var(--muted);font-size:14px;flex:1}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px}
+.price{font:800 18px var(--display);white-space:nowrap}
+.price i{font:600 12px var(--body);font-style:normal;color:var(--muted);margin-left:3px}
+.add{padding:11px 16px;font-size:14px}
+.stepper{display:flex;align-items:center;background:var(--ink);color:#fff;border-radius:14px;overflow:hidden}
+.stepper button{border:0;background:none;color:#fff;width:40px;height:42px;font-size:20px;font-weight:700}
+.stepper b{min-width:22px;text-align:center}
+
+/* Cart bar */
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:10;padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));transform:translateY(130%);opacity:0;pointer-events:none;transition:transform .45s cubic-bezier(.2,.9,.3,1.15),opacity .3s}
+.bar.on{transform:none;opacity:1;pointer-events:auto}
+.bar button{display:flex;width:100%;max-width:560px;margin:0 auto;justify-content:space-between;align-items:center;gap:12px;border:0;border-radius:20px;background:var(--ink);color:#fff;padding:10px 10px 10px 18px;box-shadow:0 10px 28px rgba(0,0,0,.35);transition:transform .2s}
+.bar .l{display:flex;align-items:center;gap:12px;text-align:left}
+.bar .cnt{background:var(--orange);color:#fff;border-radius:99px;min-width:30px;height:30px;display:inline-grid;place-items:center;font-weight:800;font-size:15px;padding:0 8px}
+.bar .bt small{display:block;color:#b9ad9f;font-size:12px;line-height:1.1}
+.bar .bt b{font:800 18px var(--display)}
+.bar .go{background:var(--yellow);color:var(--ink);font-weight:800;font-size:16px;border-radius:14px;padding:14px 22px;transition:transform .2s,filter .2s}
+@media (hover:hover){.bar button:hover .go{transform:scale(1.06);filter:brightness(1.08)}}
+.bar button:active{transform:scale(.98)}
+
+/* Sheet */
+.ov{position:fixed;inset:0;z-index:20;background:rgba(20,15,10,.6);display:none;align-items:flex-end;justify-content:center}
+.ov.on{display:flex}
+.sheet{background:var(--bg);width:100%;max-width:520px;max-height:92%;overflow:auto;border-radius:24px 24px 0 0;padding:20px 18px calc(20px + env(safe-area-inset-bottom,0px));animation:up .25s ease-out}
+@keyframes up{from{transform:translateY(40px);opacity:0}}
+@media (min-width:640px){.ov{align-items:center}.sheet{border-radius:24px}}
+.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.x{border:0;background:var(--surface);width:36px;height:36px;border-radius:50%;font-size:18px}
+.hr{display:flex;align-items:center;gap:10px}
+.clear{border:0;background:none;color:#d92d20;font-weight:700;font-size:14px;padding:8px 6px;border-radius:8px;transition:background .2s}
+.rm{border:0;background:none;width:34px;height:34px;border-radius:50%;font-size:17px;flex:none;transition:background .2s,transform .2s}
+@media (hover:hover){.clear:hover{background:rgba(217,45,32,.12)}.rm:hover{background:rgba(217,45,32,.15);transform:scale(1.1)}}
+.line{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.line .n{flex:1;font-weight:600}
+.line .n small{display:block;color:var(--muted);font-weight:400}
+.line .stepper{background:var(--surface);color:var(--text)}
+.line .stepper button{color:var(--text);width:34px;height:34px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--surface);padding:5px;border-radius:14px;margin:16px 0}
+.seg button{border:0;background:none;border-radius:10px;padding:11px;font-weight:700}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--yellow)}
+label{display:block;font-weight:600;font-size:14px;margin:12px 0 5px}
+input{width:100%;padding:13px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg)}
+input.bad{border-color:#d92d20}
+.err{color:#d92d20;font-size:13px;min-height:0;margin-top:4px}
+.sum{display:flex;justify-content:space-between;margin:12px 0;font-weight:600}
+.sum.t{font:800 20px var(--display)}
+.note{color:var(--muted);font-size:13px;margin:4px 0 0}
+.submit{width:100%;font-size:17px;padding:16px;margin-top:14px}
+.ok{text-align:center;max-width:380px;border-radius:24px;padding:32px 24px}
+.ok .tick{width:72px;height:72px;margin:0 auto 14px;border-radius:50%;background:var(--yellow);color:var(--ink);display:grid;place-items:center;font-size:34px}
+@media (max-width:639px){.ok{border-radius:24px 24px 0 0;max-width:100%}}
+footer{text-align:center;color:var(--muted);font-size:13px;padding:10px 16px 30px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-in">
+    <h1 class="logo">Квикли</h1>
+    <p class="tag">Шаурма, бургеры и роллы. Закажите онлайн — приготовим быстро.</p>
+    <ul class="facts">
+      <li><span>📍</span>г. Берёза, ул. Советская, 25</li>
+      <li><span>🕙</span>Ежедневно с 10:00 до 23:00</li>
+    </ul>
+    <button class="btn big" id="toMenu">Перейти к меню</button>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Категории меню"><div class="tabs-in" id="tabs" role="tablist"></div></nav>
+<main id="menu" aria-live="polite"></main>
+<footer>Демо-прототип. Фото и цены — примерные.</footer>
+
+<div class="bar" id="bar"><button id="openCart" aria-label="Открыть корзину и оформить заказ"><span class="l"><span class="cnt" id="cnt">0</span><span class="bt"><small>Итого</small><b id="barSum">0 BYN</b></span></span><span class="go">Оформить</span></button></div>
+
+<div class="ov" id="cartOv" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
+  <div class="sheet">
+    <div class="head"><h2 id="cartTitle">Ваш заказ</h2><div class="hr"><button class="clear" id="clearAll">Очистить всё</button><button class="x" id="closeCart" aria-label="Закрыть">✕</button></div></div>
+    <div id="lines"></div>
+    <div class="seg" role="group" aria-label="Способ получения">
+      <button id="mPick" aria-pressed="true">🏃 Самовывоз</button>
+      <button id="mDel" aria-pressed="false">🛵 Доставка</button>
+    </div>
+    <label for="name">Имя</label>
+    <input id="name" autocomplete="name" placeholder="Как к вам обращаться?">
+    <div class="err" id="eName"></div>
+    <label for="phone">Телефон</label>
+    <input id="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+375 29 123-45-67">
+    <div class="err" id="ePhone"></div>
+    <div id="addrBox" hidden>
+      <label for="addr">Адрес доставки</label>
+      <input id="addr" autocomplete="street-address" placeholder="Улица, дом, квартира">
+      <div class="err" id="eAddr"></div>
+    </div>
+    <p class="note" id="modeNote">Заберите заказ по адресу: ул. Советская, 25. Обычно готовим за 15–20 минут.</p>
+    <div class="sum"><span>Блюда</span><span id="sItems"></span></div>
+    <div class="sum" id="delRow" hidden><span>Доставка</span><span id="sDel"></span></div>
+    <div class="sum t"><span>Итого</span><span id="sTotal"></span></div>
+    <button class="btn submit" id="submit">Оформить заказ</button>
+  </div>
+</div>
+
+<div class="ov" id="okOv" role="dialog" aria-modal="true" aria-labelledby="okTitle">
+  <div class="sheet ok">
+    <div class="tick">✓</div>
+    <h2 id="okTitle">Заказ отправлен менеджеру!</h2>
+    <p class="sub" id="okText"></p>
+    <button class="btn submit" id="okBtn">Отлично</button>
+  </div>
+</div>
+
+<script>
+const CATS=[
+ {id:'shawarma',name:'Шаурма',emoji:'🌯',bg:'#ffd9a8',sub:'Свежий лаваш, сочное мясо, фирменные соусы',items:[
+  {id:'s1',name:'Шаурма «Классическая»',desc:'Курица, капуста, огурец, томат, фирменный соус',price:9.5},
+  {id:'s2',name:'Шаурма «Фета»',desc:'Курица, сыр фета, овощи, чесночный соус',price:11.5},
+  {id:'s3',name:'Шаурма «Сальса»',desc:'Острая, с перчиком халапеньо и пикантным соусом 🌶️',price:12}]},
+ {id:'burgers',name:'Бургеры',emoji:'🍔',bg:'#ffcf9c',sub:'Рубленая котлета и пышная булочка',items:[
+  {id:'b1',name:'Фирменный Бургер-Кинг',desc:'Котлета на выбор, сыр, лук, томаты, салат',price:10},
+  {id:'b2',name:'Чикен бургер',desc:'280 г · куриное филе в панировке, салат, соус',price:8.5}]},
+ {id:'sushi',name:'Суши и роллы',emoji:'🍣',bg:'#ffe3a3',sub:'Рис, нори и свежая начинка',items:[
+  {id:'r1',name:'Ролл Филадельфия',desc:'8 шт · лосось, сливочный сыр, огурец',price:19.9},
+  {id:'r2',name:'Ролл Калифорния',desc:'8 шт · краб, авокадо, икра масаго',price:16.9},
+  {id:'r3',name:'Тэмпура ролл',desc:'8 шт · жареный ролл с курицей и сыром',price:15.5}]},
+ {id:'snacks',name:'Закуски и выпечка',emoji:'🍟',bg:'#ffe08a',sub:'Чтобы взять к основному блюду',items:[
+  {id:'z1',name:'Картофель фри',desc:'150 г · хрустящий, с соусом на выбор',price:4.5},
+  {id:'z2',name:'Наггетсы',desc:'9 шт · куриное филе, соус барбекю',price:7.5},
+  {id:'z3',name:'Лодочка с сыром и ветчиной',desc:'280 г · горячая выпечка с яйцом',price:6.9}]},
+ {id:'drinks',name:'Напитки и десерты',emoji:'🍹',bg:'#ffd0b0',sub:'Домашние лимонады, кофе и мороженое',items:[
+  {id:'d1',name:'Лимонад «Манго-маракуйя»',desc:'0,4 л · фирменный, со льдом',price:5.5},
+  {id:'d2',name:'Лимонад «Мохито»',desc:'0,4 л · лайм, мята, содовая',price:5.5},
+  {id:'d3',name:'Кофе капучино',desc:'250 мл · свежая обжарка',price:4.2},
+  {id:'d4',name:'Мороженое с топпингом',desc:'120 г · пломбир, карамель или шоколад',price:3.9}]}
+];
+const DELIVERY_FEE=4, FREE_FROM=40;
+const $=id=>document.getElementById(id);
+const fmt=n=>n.toFixed(2).replace('.',',')+' BYN';
+const all=CATS.flatMap(c=>c.items.map(i=>({...i,cat:c})));
+const find=id=>all.find(i=>i.id===id);
+let cart={}, tab=CATS[0].id, mode='pick';
+
+function renderTabs(){
+  $('tabs').innerHTML=CATS.map(c=>`<button class="tab" role="tab" data-t="${c.id}" aria-selected="${c.id===tab}">${c.emoji} ${c.name}</button>`).join('');
+}
+function renderMenu(){
+  const c=CATS.find(x=>x.id===tab);
+  $('menu').innerHTML=`<h2>${c.name}</h2><p class="sub">${c.sub}</p><div class="grid">`+c.items.map(i=>{
+    const q=cart[i.id]||0;
+    const ctl=q?`<div class="stepper"><button data-d="-1" data-i="${i.id}" aria-label="Убрать">−</button><b>${q}</b><button data-d="1" data-i="${i.id}" aria-label="Добавить ещё">+</button></div>`
+      :`<button class="btn add" data-add="${i.id}">В корзину</button>`;
+    return `<article class="card"><div class="photo" style="background:linear-gradient(135deg,${c.bg},#ffb347)">${c.emoji}<small>фото блюда</small></div>
+    <div class="info"><h3>${i.name}</h3><p>${i.desc}</p><div class="row"><span class="price">${i.price.toFixed(2).replace('.',',')}<i>BYN</i></span>${ctl}</div></div></article>`;
+  }).join('')+'</div>';
+}
+const count=()=>Object.values(cart).reduce((a,b)=>a+b,0);
+const itemsSum=()=>Object.entries(cart).reduce((s,[id,q])=>s+find(id).price*q,0);
+const delFee=()=>mode==='del'&&itemsSum()<FREE_FROM?DELIVERY_FEE:0;
+
+function change(id,d){
+  cart[id]=(cart[id]||0)+d;
+  if(cart[id]<=0)delete cart[id];
+  sync();
+}
+function sync(){
+  renderMenu();
+  const n=count();
+  $('bar').classList.toggle('on',n>0&&!$('cartOv').classList.contains('on'));
+  $('cnt').textContent=n;
+  $('barSum').textContent=fmt(itemsSum());
+  if($('cartOv').classList.contains('on')){ if(!n)closeCart(); else renderCart(); }
+}
+function renderCart(){
+  $('lines').innerHTML=Object.entries(cart).map(([id,q])=>{
+    const i=find(id);
+    return `<div class="line"><div class="n">${i.name}<small>${fmt(i.price)}</small></div>
+    <div class="stepper"><button data-d="-1" data-i="${id}" aria-label="Убрать">−</button><b>${q}</b><button data-d="1" data-i="${id}" aria-label="Добавить ещё">+</button></div>
+    <button class="rm" data-rm="${id}" aria-label="Удалить ${i.name} из корзины" title="Удалить">🗑️</button></div>`;
+  }).join('');
+  const s=itemsSum(),f=delFee();
+  $('sItems').textContent=fmt(s);
+  $('delRow').hidden=mode!=='del';
+  $('sDel').textContent=f?fmt(f):'Бесплатно';
+  $('sTotal').textContent=fmt(s+f);
+}
+function openCart(){ $('cartOv').classList.add('on'); $('bar').classList.remove('on'); renderCart(); }
+function closeCart(){ $('cartOv').classList.remove('on'); sync(); }
+function setMode(m){
+  mode=m;
+  $('mPick').setAttribute('aria-pressed',m==='pick');
+  $('mDel').setAttribute('aria-pressed',m==='del');
+  $('addrBox').hidden=m!=='del';
+  $('modeNote').textContent=m==='pick'
+    ?'Заберите заказ по адресу: ул. Советская, 25. Обычно готовим за 15–20 минут.'
+    :`Доставка по Берёзе ${DELIVERY_FEE} BYN, бесплатно от ${FREE_FROM} BYN. Обычно 40–60 минут.`;
+  renderCart();
+}
+function check(inp,errEl,ok,msg){
+  inp.classList.toggle('bad',!ok); errEl.textContent=ok?'':msg; return ok;
+}
+function submit(){
+  const name=$('name'),phone=$('phone'),addr=$('addr');
+  const digits=phone.value.replace(/\D/g,'').length;
+  let ok=check(name,$('eName'),name.value.trim().length>=2,'Введите имя');
+  ok=check(phone,$('ePhone'),digits>=9,'Введите номер телефона полностью')&&ok;
+  if(mode==='del') ok=check(addr,$('eAddr'),addr.value.trim().length>=5,'Укажите адрес доставки')&&ok;
+  if(!ok)return;
+  const total=itemsSum()+delFee();
+  const num=Math.floor(100+Math.random()*900);
+  $('okText').textContent=`Заказ №${num} на сумму ${fmt(total)}. ${name.value.trim()}, мы позвоним вам для подтверждения. ${mode==='pick'?'Ждём вас на Советской, 25.':'Курьер приедет по указанному адресу.'}`;
+  cart={}; $('cartOv').classList.remove('on');
+  ['name','phone','addr'].forEach(i=>$(i).value='');
+  sync();
+  $('okOv').classList.add('on');
+}
+
+$('tabs').addEventListener('click',e=>{const b=e.target.closest('[data-t]');if(!b)return;tab=b.dataset.t;renderTabs();renderMenu();b.scrollIntoView({inline:'center',block:'nearest'});});
+$('menu').addEventListener('click',e=>{
+  const a=e.target.closest('[data-add]'); if(a)return change(a.dataset.add,1);
+  const s=e.target.closest('[data-d]'); if(s)change(s.dataset.i,+s.dataset.d);
+});
+$('lines').addEventListener('click',e=>{
+  const r=e.target.closest('[data-rm]'); if(r){delete cart[r.dataset.rm];return sync();}
+  const s=e.target.closest('[data-d]'); if(s)change(s.dataset.i,+s.dataset.d);
+});
+$('clearAll').onclick=()=>{cart={};sync();};
+$('toMenu').onclick=()=>$('tabs').scrollIntoView({behavior:'smooth'});
+$('openCart').onclick=openCart;
+$('closeCart').onclick=closeCart;
+$('cartOv').addEventListener('click',e=>{if(e.target===e.currentTarget)closeCart();});
+$('mPick').onclick=()=>setMode('pick');
+$('mDel').onclick=()=>setMode('del');
+$('submit').onclick=submit;
+$('okBtn').onclick=()=>{$('okOv').classList.remove('on');window.scrollTo({top:0,behavior:'smooth'});};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if($('cartOv').classList.contains('on'))closeCart();$('okOv').classList.remove('on');}});
+
+renderTabs();sync();
+</script>
+</body>
+</html>
