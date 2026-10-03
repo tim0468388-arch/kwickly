@@ -115,6 +115,7 @@ input.bad{border-color:#d92d20}
 .sum{display:flex;justify-content:space-between;margin:12px 0;font-weight:600}
 .sum.t{font:800 20px var(--display)}
 .note{color:var(--muted);font-size:13px;margin:4px 0 0}
+.btn:disabled{opacity:.6;cursor:wait;transform:none!important;filter:none!important;box-shadow:none!important}
 .submit{width:100%;font-size:17px;padding:16px;margin-top:14px}
 .ok{text-align:center;max-width:380px;border-radius:24px;padding:32px 24px}
 .ok .tick{width:72px;height:72px;margin:0 auto 14px;border-radius:50%;background:var(--yellow);color:var(--ink);display:grid;place-items:center;font-size:34px}
@@ -166,6 +167,8 @@ footer{text-align:center;color:var(--muted);font-size:13px;padding:10px 16px 30p
     <div class="sum"><span>Блюда</span><span id="sItems"></span></div>
     <div class="sum" id="delRow" hidden><span>Доставка</span><span id="sDel"></span></div>
     <div class="sum t"><span>Итого</span><span id="sTotal"></span></div>
+    <p class="note">💵 Оплата при получении.</p>
+    <div class="err" id="sendErr" role="alert"></div>
     <button class="btn submit" id="submit">Оформить заказ</button>
   </div>
 </div>
@@ -203,6 +206,16 @@ const CATS=[
   {id:'d4',name:'Мороженое с топпингом',desc:'120 г · пломбир, карамель или шоколад',price:3.9}]}
 ];
 const DELIVERY_FEE=4, FREE_FROM=40;
+
+/* ===== Настройки Telegram =====
+   ВНИМАНИЕ: всё, что записано в HTML, видно любому посетителю сайта (через «Просмотр кода»).
+   Для боевого сайта лучше указать PROXY_URL (ваш серверный адрес, который сам хранит токен),
+   а TG_TOKEN оставить пустым. */
+const CONFIG={
+  TG_TOKEN:'8894912214:AAFZNh5QBpjD1-mswvBYYtvaqNyyaLNmZqQ',
+  TG_CHAT_ID:'5387265683',
+  PROXY_URL:''   // например 'https://ваш-сервер/api/order' — тогда токен в браузер не попадает
+};
 const $=id=>document.getElementById(id);
 const fmt=n=>n.toFixed(2).replace('.',',')+' BYN';
 const all=CATS.flatMap(c=>c.items.map(i=>({...i,cat:c})));
@@ -267,7 +280,39 @@ function setMode(m){
 function check(inp,errEl,ok,msg){
   inp.classList.toggle('bad',!ok); errEl.textContent=ok?'':msg; return ok;
 }
-function submit(){
+function buildOrderText(num,total,name,phone,addr){
+  const lines=Object.entries(cart).map(([id,q],k)=>{
+    const i=find(id);
+    return `${k+1}. ${i.name} × ${q} = ${fmt(i.price*q)}`;
+  });
+  const f=delFee();
+  const when=new Date().toLocaleString('ru-RU',{timeZone:'Europe/Minsk'});
+  return [
+    `🆕 Новый заказ №${num}`,
+    `🕒 ${when}`,
+    '',
+    `👤 Имя: ${name}`,
+    `📞 Телефон: ${phone}`,
+    `🚚 Способ: ${mode==='pick'?'Самовывоз':'Доставка'}`,
+    mode==='del'?`📍 Адрес: ${addr}`:'',
+    '💵 Оплата: при получении',
+    '',
+    '🧾 Состав заказа:',
+    ...lines,
+    '',
+    `Блюда: ${fmt(itemsSum())}`,
+    mode==='del'?`Доставка: ${f?fmt(f):'бесплатно'}`:'',
+    `ИТОГО к оплате: ${fmt(total)}`
+  ].filter((l,k,a)=>l!==''||a[k-1]!=='').join('\n');
+}
+async function sendToTelegram(text){
+  const url=CONFIG.PROXY_URL||`https://api.telegram.org/bot${CONFIG.TG_TOKEN}/sendMessage`;
+  const body=CONFIG.PROXY_URL?{text}:{chat_id:CONFIG.TG_CHAT_ID,text};
+  const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok||j.ok===false)throw new Error(j.description||('HTTP '+r.status));
+}
+async function submit(){
   const name=$('name'),phone=$('phone'),addr=$('addr');
   const digits=phone.value.replace(/\D/g,'').length;
   let ok=check(name,$('eName'),name.value.trim().length>=2,'Введите имя');
@@ -276,7 +321,18 @@ function submit(){
   if(!ok)return;
   const total=itemsSum()+delFee();
   const num=Math.floor(100+Math.random()*900);
-  $('okText').textContent=`Заказ №${num} на сумму ${fmt(total)}. ${name.value.trim()}, мы позвоним вам для подтверждения. ${mode==='pick'?'Ждём вас на Советской, 25.':'Курьер приедет по указанному адресу.'}`;
+  const btn=$('submit');
+  btn.disabled=true; btn.textContent='Отправляем…'; $('sendErr').textContent='';
+  try{
+    await sendToTelegram(buildOrderText(num,total,name.value.trim(),phone.value.trim(),addr.value.trim()));
+  }catch(err){
+    console.error('Telegram error:',err);
+    $('sendErr').textContent='Не удалось отправить заказ. Проверьте интернет и попробуйте ещё раз или позвоните нам.';
+    btn.disabled=false; btn.textContent='Оформить заказ';
+    return;
+  }
+  btn.disabled=false; btn.textContent='Оформить заказ';
+  $('okText').textContent=`Заказ №${num} на сумму ${fmt(total)}. ${name.value.trim()}, мы позвоним вам для подтверждения. Оплата при получении. ${mode==='pick'?'Ждём вас на Советской, 25.':'Курьер приедет по указанному адресу.'}`;
   cart={}; $('cartOv').classList.remove('on');
   ['name','phone','addr'].forEach(i=>$(i).value='');
   sync();
@@ -307,3 +363,4 @@ renderTabs();sync();
 </script>
 </body>
 </html>
+
